@@ -2604,7 +2604,7 @@ public class CommunicationManager {
         List<Field> fields = new ArrayList<>();
 
         if (player != null) {
-            fields = plugin.getForceFieldManager().getFields(target, player.getWorld());
+            fields = plugin.getForceFieldManager().getFields(target);
         } else {
             for (World world : plugin.getServer().getWorlds()) {
                 fields.addAll(plugin.getForceFieldManager().getFields(target, world));

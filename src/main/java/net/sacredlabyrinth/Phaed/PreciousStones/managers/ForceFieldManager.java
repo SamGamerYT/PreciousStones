@@ -111,6 +111,13 @@ public final class ForceFieldManager {
             return;
         }
 
+        List<Field> fields = getSourceFields(fieldBlock.getLocation(), FieldFlag.ALL);
+        if (!fields.isEmpty()) {
+            ChatHelper.send(player, "alreadyField");
+            event.setCancelled(true);
+            return;
+        }
+
         // check if the pstone limit has been reached by the player
 
         if (plugin.getLimitManager().reachedLimit(player, fs)) {
@@ -713,6 +720,19 @@ public final class ForceFieldManager {
             return owned.get(type);
         }
         return new ArrayList<>();
+    }
+
+    public List<Field> getFields(String target) {
+        List<Field> fields = new ArrayList<>();
+
+        for (String world : fieldsByWorld.keySet()) {
+            World w = Bukkit.getWorld(world);
+            if (w == null) continue;
+
+            fields.addAll(getFields(target, w));
+        }
+
+        return fields;
     }
 
     /**

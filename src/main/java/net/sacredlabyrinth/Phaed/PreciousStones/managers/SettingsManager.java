@@ -1,5 +1,6 @@
 package net.sacredlabyrinth.Phaed.PreciousStones.managers;
 
+import com.cryptomorin.xseries.XPotion;
 import net.sacredlabyrinth.Phaed.PreciousStones.MaterialName;
 import net.sacredlabyrinth.Phaed.PreciousStones.PreciousStones;
 import net.sacredlabyrinth.Phaed.PreciousStones.entries.BlockTypeEntry;
@@ -48,7 +49,6 @@ public final class SettingsManager {
     private int globalFieldLimit;
     private boolean noRefunds;
     private BlockTypeEntry cuboidDefiningType;
-    private BlockTypeEntry cuboidVisualizationType;
     private boolean disableMessages;
     private List<String> blacklistedWorlds;
     private int maxSnitchRecords;
@@ -57,8 +57,6 @@ public final class SettingsManager {
     private int griefRevertMinInterval;
     private boolean visualizationNewStyle;
     private BlockTypeEntry visualizeMarkBlock;
-    private BlockTypeEntry visualizeFrameBlock;
-    private BlockTypeEntry visualizeBlock;
     private int visualizeSeconds;
     private int visualizeDensity;
     private int visualizeTicksBetweenSends;
@@ -298,7 +296,6 @@ public final class SettingsManager {
         // ********************************** Cuboid
 
         cuboidDefiningType = loadTypeEntry("cuboid.defining-blocktype");
-        cuboidVisualizationType = loadTypeEntry("cuboid.visualization-blocktype");
 
         // ********************************** Cleanup
 
@@ -312,8 +309,6 @@ public final class SettingsManager {
 
         // ********************************** Visualization
 
-        visualizeFrameBlock = loadTypeEntry("visualization.frame-block-type");
-        visualizeBlock = loadTypeEntry("visualization.block-type");
         visualizeSeconds = loadInt("visualization.seconds");
         visualizationNewStyle = loadBoolean("visualization.new-dotted-style");
         visualizeEndOnMove = loadBoolean("visualization.end-on-player-move");
@@ -528,16 +523,16 @@ public final class SettingsManager {
     }
 
     public boolean isHarmfulPotion(PotionEffectType pot) {
-        return pot.equals(PotionEffectType.BLINDNESS) ||
-        		pot.equals(PotionEffectType.CONFUSION) ||
-        		pot.equals(PotionEffectType.HARM) ||
-        		pot.equals(PotionEffectType.HUNGER) ||
-        		pot.equals(PotionEffectType.INCREASE_DAMAGE) ||
-        		pot.equals(PotionEffectType.POISON) ||
-        		pot.equals(PotionEffectType.SLOW) ||
-                pot.equals(PotionEffectType.SLOW_DIGGING) ||
-                pot.equals(PotionEffectType.UNLUCK) ||
-                pot.equals(PotionEffectType.WEAKNESS);
+        return pot.equals(XPotion.BLINDNESS.getPotionEffectType()) ||
+        		pot.equals(XPotion.NAUSEA.getPotionEffectType()) ||
+        		pot.equals(XPotion.INSTANT_DAMAGE.getPotionEffectType()) ||
+        		pot.equals(XPotion.HUNGER.getPotionEffectType()) ||
+        		pot.equals(XPotion.STRENGTH.getPotionEffectType()) ||
+        		pot.equals(XPotion.POISON.getPotionEffectType()) ||
+        		pot.equals(XPotion.SLOWNESS.getPotionEffectType()) ||
+                pot.equals(XPotion.MINING_FATIGUE.getPotionEffectType()) ||
+                pot.equals(XPotion.UNLUCK.getPotionEffectType()) ||
+                pot.equals(XPotion.WEAKNESS.getPotionEffectType());
 
     }
 
@@ -1077,13 +1072,6 @@ public final class SettingsManager {
     }
 
     /**
-     * @return the visualizeBlock
-     */
-    public BlockTypeEntry getVisualizeBlock() {
-        return visualizeBlock;
-    }
-
-    /**
      * @return the visualizeSeconds
      */
     public int getVisualizeSeconds() {
@@ -1489,14 +1477,6 @@ public final class SettingsManager {
 
     public BlockTypeEntry getCuboidDefiningType() {
         return cuboidDefiningType;
-    }
-
-    public BlockTypeEntry getCuboidVisualizationType() {
-        return cuboidVisualizationType;
-    }
-
-    public BlockTypeEntry getVisualizeFrameBlock() {
-        return visualizeFrameBlock;
     }
 
     public int getVisualizeTicksBetweenSends() {

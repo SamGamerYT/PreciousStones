@@ -71,6 +71,7 @@
 							<include>com.zaxxer:HikariCP</include>
 							<include>org.slf4j:slf4j-api</include>
 							<include>org.slf4j:slf4j-jdk14</include>
+                            <include>com.github.cryptomorin:XSeries</include>
 						</includes>
 					</artifactSet>
 					<relocations>
@@ -86,7 +87,11 @@
 							<pattern>org.slf4j</pattern>
 							<shadedPattern>net.sacredlabyrinth.Phaed.PreciousStones.shaded.org.slf4j</shadedPattern>
 						</relocation>
-					</relocations>
+                        <relocation>
+                            <pattern>com.cryptomorin.xseries</pattern>
+                            <shadedPattern>net.sacredlabyrinth.Phaed.PreciousStones.shaded.xseries</shadedPattern>
+                        </relocation>
+                    </relocations>
 				</configuration>
 				<executions>
 					<execution>
@@ -140,7 +145,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.17-R0.1-SNAPSHOT</version>
+            <version>1.20.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -158,13 +163,13 @@
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.3.9-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldguard</groupId>
-            <artifactId>worldguard-legacy</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <artifactId>worldguard-bukkit</artifactId>
+            <version>7.0.9-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -237,20 +242,19 @@
         <dependency>
         	<groupId>io.papermc</groupId>
         	<artifactId>paperlib</artifactId>
-        	<version>1.0.4</version>
+        	<version>1.0.7</version>
         	<optional>true</optional>
         </dependency>
         <dependency>
         	<groupId>com.zaxxer</groupId>
         	<artifactId>HikariCP</artifactId>
-        	<version>3.4.5</version>
+        	<version>4.0.3</version>
         	<optional>true</optional>
         </dependency>
         <dependency>
-        	<groupId>org.slf4j</groupId>
-        	<artifactId>slf4j-jdk14</artifactId>
-        	<version>1.7.25</version>
-        	<scope>runtime</scope>
+            <groupId>com.github.cryptomorin</groupId>
+            <artifactId>XSeries</artifactId>
+            <version>12.0.0</version>
         </dependency>
         <dependency>
             <groupId>ant-contrib</groupId>
@@ -273,8 +277,12 @@
         	<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     	</repository>
         <repository>
-            <id>sk89q</id>
-            <url>https://maven.sk89q.com/repo/</url>
+            <id>papermc</id>
+            <url>https://papermc.io/repo/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>enginehub</id>
+            <url>https://maven.enginehub.org/repo/</url>
         </repository>
         <repository>
             <id>elMakers</id>
@@ -288,40 +296,15 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-        <repository>
-        	<id>papermc</id>
-        	<url>https://papermc.io/repo/repository/maven-public/</url>
-        </repository>
     </repositories>
 
     <!-- GitHub/Jenkins -->
 
-    <ciManagement>
-        <system>jenkins</system>
-        <url>http://104.236.246.108/:8080</url>
-    </ciManagement>
-
-    <scm>
+   <scm>
         <connection>scm:git:git:@github.com:marcelo-mason/PreciousStones.git</connection>
         <developerConnection>scm:git:git:@github.com:marcelo-mason/PreciousStones.git</developerConnection>
         <url>http://github.com/marcelo-mason/PreciousStones.git/tree/master/</url>
         <tag>PreciousStones</tag>
-
     </scm>
-
-    <!-- Upstream Distribution -->
-
-    <distributionManagement>
-        <repository>
-            <id>SacredCoding</id>
-            <name>SacredCoding-releases</name>
-            <url>http://104.236.246.108:8081/artifactory/plugins-release-local</url>
-        </repository>
-        <snapshotRepository>
-            <id>SacredCoding</id>
-            <name>SacredCoding-snapshots</name>
-            <url>http://104.236.246.108:8081/artifactory/plugins-release-local</url>
-        </snapshotRepository>
-    </distributionManagement>
 
 </project>

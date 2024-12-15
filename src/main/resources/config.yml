@@ -414,7 +414,7 @@ force-field-blocks:
   ground-block: dirt
   fertile-blocks:
   - dirt
-  - grass
+  - grass_block
   - gravel
   - netherrack
   - snow
@@ -453,7 +453,7 @@ force-field-blocks:
   ground-block: dirt
   fertile-blocks:
   - dirt
-  - grass
+  - grass_block
   - gravel
   - netherrack
   - snow
@@ -493,7 +493,7 @@ force-field-blocks:
   ground-block: dirt
   fertile-blocks:
   - dirt
-  - grass
+  - grass_block
   - gravel
   - netherrack
   - snow
@@ -532,7 +532,7 @@ force-field-blocks:
   ground-block: dirt
   fertile-blocks:
   - dirt
-  - grass
+  - grass_block
   - gravel
   - netherrack
   - snow
@@ -641,15 +641,12 @@ warn:
   slow-repair: true
   place: true
 cuboid:
-  visualization-blocktype: glass
   defining-blocktype: obsidian
 visualization:
   new-dotted-style: true
-  block-type: glass
   seconds: 30
   mark-block-type: obsidian
   end-on-player-move: false
-  frame-block-type: glass
   blocks-to-send: 100
   ticks-between-sends: 10
   default-density: 8

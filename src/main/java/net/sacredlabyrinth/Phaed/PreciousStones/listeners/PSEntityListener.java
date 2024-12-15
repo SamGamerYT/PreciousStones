@@ -1,5 +1,6 @@
 package net.sacredlabyrinth.Phaed.PreciousStones.listeners;
 
+import com.cryptomorin.xseries.XEntityType;
 import net.sacredlabyrinth.Phaed.PreciousStones.PreciousStones;
 import net.sacredlabyrinth.Phaed.PreciousStones.entries.BlockEntry;
 import net.sacredlabyrinth.Phaed.PreciousStones.entries.BlockTypeEntry;
@@ -460,6 +461,10 @@ public class PSEntityListener implements Listener {
         if (event.getEntity().getType().equals(EntityType.ITEM_FRAME) || event.getEntity().getType().equals(EntityType.GLOW_ITEM_FRAME)) {
             Player player = Helper.getDamagingPlayer(event);
 
+            if (player == null) {
+                event.setCancelled(true);
+            }
+
             if (player != null && !plugin.getPermissionsManager().has(player, "preciousstones.bypass.item-frame-take")) {
                 Field field = plugin.getForceFieldManager().getEnabledSourceField(event.getEntity().getLocation(), FieldFlag.PREVENT_ITEM_FRAME_TAKE);
 
@@ -489,7 +494,7 @@ public class PSEntityListener implements Listener {
             }
         }
 
-        if (event.getEntity() instanceof Minecart || event.getEntity().getType().equals(EntityType.PRIMED_TNT) || event.getEntity().getType().equals(EntityType.ENDER_CRYSTAL)) {
+        if (event.getEntity() instanceof Minecart || event.getEntity().getType().equals(XEntityType.TNT.get()) || event.getEntity().getType().equals(XEntityType.END_CRYSTAL.get())) {
 
             Player player = Helper.getDamagingPlayer(event);
 

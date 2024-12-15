@@ -1,5 +1,6 @@
 package net.sacredlabyrinth.Phaed.PreciousStones.listeners;
 
+import com.cryptomorin.xseries.XPotion;
 import net.sacredlabyrinth.Phaed.PreciousStones.PreciousStones;
 import net.sacredlabyrinth.Phaed.PreciousStones.blocks.TargetBlock;
 import net.sacredlabyrinth.Phaed.PreciousStones.entries.*;
@@ -1406,8 +1407,8 @@ public class PSPlayerListener implements Listener {
 		Collection<PotionEffect> effects = potion.getEffects();
 
 		for (PotionEffect effect : effects) {
-			if (effect.getType().equals(PotionEffectType.BLINDNESS) || effect.getType().equals(PotionEffectType.CONFUSION) || effect.getType().equals(PotionEffectType.HARM) || effect.getType().equals(PotionEffectType.POISON) || effect.getType().equals(PotionEffectType.WEAKNESS)
-					|| effect.getType().equals(PotionEffectType.SLOW) || effect.getType().equals(PotionEffectType.SLOW_DIGGING)) {
+			if (effect.getType().equals(XPotion.BLINDNESS.getPotionEffectType()) || effect.getType().equals(XPotion.NAUSEA.getPotionEffectType()) || effect.getType().equals(XPotion.INSTANT_DAMAGE.getPotionEffectType()) || effect.getType().equals(XPotion.POISON.getPotionEffectType()) || effect.getType().equals(XPotion.WEAKNESS.getPotionEffectType())
+					|| effect.getType().equals(XPotion.SLOWNESS.getPotionEffectType()) || effect.getType().equals(XPotion.MINING_FATIGUE.getPotionEffectType())) {
 				hasHarm = true;
 			}
 		}

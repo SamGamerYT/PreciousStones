@@ -10,10 +10,7 @@ import net.sacredlabyrinth.Phaed.PreciousStones.translocation.TranslocationAppli
 import net.sacredlabyrinth.Phaed.PreciousStones.translocation.TranslocationImporter;
 import net.sacredlabyrinth.Phaed.PreciousStones.translocation.TranslocationRemover;
 import net.sacredlabyrinth.Phaed.PreciousStones.translocation.TranslocationUpdater;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.Tag;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -386,7 +383,7 @@ public final class TranslocationManager {
         inhabitants.add(player);
 
         for (Player p : inhabitants) {
-            p.sendBlockChange(field.getLocation(), Material.GLASS, (byte) 0);
+            p.spawnParticle(Particle.REDSTONE, field.getLocation(), 10, 0.5, 0.5, 0.5, 0, new Particle.DustOptions(Color.fromRGB(255, 0, 0), 1));
         }
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
