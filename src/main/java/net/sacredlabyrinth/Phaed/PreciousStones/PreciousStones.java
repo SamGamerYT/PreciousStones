@@ -8,6 +8,7 @@ import net.sacredlabyrinth.Phaed.PreciousStones.managers.*;
 import net.sacredlabyrinth.Phaed.PreciousStones.storage.StorageManager;
 import net.sacredlabyrinth.Phaed.PreciousStones.uuid.UUIDMigration;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -203,6 +204,9 @@ public class PreciousStones extends JavaPlugin {
         }
         if (permissionsManager.hasMcMMO()) {
             getServer().getPluginManager().registerEvents(mcmmoListener, this);
+        }
+        if (Bukkit.getPluginManager().isPluginEnabled("DeluxeSellwands")) {
+            getServer().getPluginManager().registerEvents(new SellWandListener(), this);
         }
     }
 
