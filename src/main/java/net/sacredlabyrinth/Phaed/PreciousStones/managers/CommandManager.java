@@ -1359,36 +1359,41 @@ public final class CommandManager implements TabExecutor {
                         return false;
                     } else if (cmd.equals(ChatHelper.format("commandTeleport"))) {
                         if (args.length < 1) {
-                            player.sendMessage("Usage: /ps teleport <selector> [number]");
+                            player.sendMessage("Usage: /ps teleport [number]");
+                            return true;
+                        }
+
+                        String selector = hasplayer ? player.getName() : null;
+                        String indexStr = args[0];
+                        if (args.length == 2 && plugin.getPermissionsManager().has(player, "preciousstones.benefit.teleport.admin")) {
+                            selector = args[0];
+                            indexStr = args[1];
+                        }
+
+                        int index = 0;
+                        try {
+                            index = Integer.parseInt(indexStr);
+                        } catch (NumberFormatException e) {
+                            player.sendMessage("Invalid number: " + args[1]);
                             return true;
                         }
 
                         if (plugin.getPermissionsManager().has(player, "preciousstones.benefit.teleport") && hasplayer) {
-                            List<Field> fields = plugin.getForceFieldManager().getFields(args[0]);
+                            List<Field> fields = plugin.getForceFieldManager().getFields(selector);
                             if (fields.isEmpty()) {
                                 plugin.getCommunicationManager().showNotFound(player);
                                 return true;
                             }
 
-                            int index = 0;
-                            if (args.length == 2) {
-                                try {
-                                    index = Integer.parseInt(args[1]);
-                                } catch (NumberFormatException e) {
-                                    player.sendMessage("Invalid number: " + args[1]);
-                                    return true;
-                                }
-                            }
-
                             if (index < 0 || index >= fields.size()) {
-                                player.sendMessage("Invalid number: " + args[1]);
+                                player.sendMessage("Invalid number: " + index);
                                 return true;
                             }
 
                             Field field = fields.get(index);
                             player.teleport(field.getLocation());
 
-                            player.sendMessage("Teleported to " + (field.getName().isEmpty() ? args[0] : field.getName()));
+                            player.sendMessage("Teleported to " + (field.getName().isEmpty() ? selector : field.getName()));
                             return true;
                         }
 
