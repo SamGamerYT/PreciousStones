@@ -112,7 +112,7 @@ public final class ForceFieldManager {
         }
 
         List<Field> fields = getSourceFields(fieldBlock.getLocation(), FieldFlag.ALL);
-        if (!fields.isEmpty()) {
+        if (!fields.isEmpty() && fields.stream().anyMatch(field -> !field.isOwner(player.getName()))) {
             ChatHelper.send(player, "alreadyField");
             event.setCancelled(true);
             return;
