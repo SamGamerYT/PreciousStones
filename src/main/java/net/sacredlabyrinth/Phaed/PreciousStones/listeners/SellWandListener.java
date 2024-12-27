@@ -3,6 +3,7 @@ package net.sacredlabyrinth.Phaed.PreciousStones.listeners;
 import dev.norska.dsw.api.DeluxeSellwandPreSellEvent;
 import net.sacredlabyrinth.Phaed.PreciousStones.PreciousStones;
 import net.sacredlabyrinth.Phaed.PreciousStones.field.Field;
+import net.sacredlabyrinth.Phaed.PreciousStones.field.FieldFlag;
 import net.sacredlabyrinth.Phaed.PreciousStones.helpers.ChatHelper;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -26,7 +27,7 @@ public class SellWandListener implements Listener {
             return;
         }
 
-        Field field = plugin.getForceFieldManager().getField(block);
+        Field field = plugin.getForceFieldManager().getEnabledSourceField(block.getLocation(), FieldFlag.ALL);
 
         if (field != null && !field.isOwner(player.getName()) && !field.isAllowed(player.getName())) {
             event.setCancelled(true);
