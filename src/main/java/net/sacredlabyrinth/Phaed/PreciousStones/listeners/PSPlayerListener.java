@@ -14,6 +14,7 @@ import net.sacredlabyrinth.Phaed.PreciousStones.modules.BuyingModule;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -503,6 +504,27 @@ public class PSPlayerListener implements Listener {
 
 	}
 
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onSignEdit(PlayerSignOpenEvent event){
+		if (plugin.getSettingsManager().isBlacklistedWorld(event.getPlayer().getLocation().getWorld())) {
+			return;
+		}
+
+		final Player player = event.getPlayer();
+		final Sign sign = event.getSign();
+
+		if (!plugin.getPermissionsManager().has(player, "preciousstones.bypass.use")) {
+			Field field = plugin.getForceFieldManager().getEnabledSourceField(sign.getLocation(), FieldFlag.PREVENT_USE);
+
+			if (field != null) {
+				if (FieldFlag.PREVENT_USE.applies(field, player)) {
+					event.setCancelled(true);
+					plugin.getCommunicationManager().warnUse(player, sign.getBlock(), field);
+				}
+			}
+		}
+	}
+
 	/**
 	 * @param event
 	 */
@@ -742,7 +764,7 @@ public class PSPlayerListener implements Listener {
 
 				if (useField != null) {
 					if (FieldFlag.PREVENT_USE.applies(useField, player)) {
-						if (!useField.getSettings().canUse(new BlockTypeEntry(block)) || plugin.getSettingsManager().isASign(block.getType())  || is.getType() == Material.END_CRYSTAL) {
+						if (!useField.getSettings().canUse(new BlockTypeEntry(block)) || is.getType() == Material.END_CRYSTAL) {
 							plugin.getCommunicationManager().warnUse(player, block, useField);
 							event.setCancelled(true);
 							return;
