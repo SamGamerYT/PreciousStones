@@ -644,7 +644,7 @@ cuboid:
   defining-blocktype: obsidian
 visualization:
   new-dotted-style: true
-  seconds: 30
+  seconds: 10
   mark-block-type: obsidian
   end-on-player-move: false
   blocks-to-send: 100

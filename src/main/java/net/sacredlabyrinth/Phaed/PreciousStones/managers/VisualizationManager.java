@@ -14,7 +14,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -103,166 +102,41 @@ public class VisualizationManager {
         }
 
         PlayerEntry data = plugin.getPlayerManager().getPlayerEntry(player);
-
         if (data.getDensity() == 0) {
             return;
         }
 
         vis.addField(field);
-
-        int minx = field.getX() - field.getRadius() - 1;
-        int maxx = field.getX() + field.getRadius() + 1;
-        int minz = field.getZ() - field.getRadius() - 1;
-        int maxz = field.getZ() + field.getRadius() + 1;
-        int miny = field.getY() - (Math.max(field.getHeight() - 1, 0) / 2) - 1;
-        int maxy = field.getY() + (Math.max(field.getHeight() - 1, 0) / 2) + 1;
-
+        int minx = field.getX() - field.getRadius();
+        int maxx = field.getX() + field.getRadius();
+        int minz = field.getZ() - field.getRadius();
+        int maxz = field.getZ() + field.getRadius();
         if (field.hasFlag(FieldFlag.CUBOID)) {
-            minx = field.getMinx() - 1;
-            maxx = field.getMaxx() + 1;
-            minz = field.getMinz() - 1;
-            maxz = field.getMaxz() + 1;
-            miny = field.getMiny() - 1;
-            maxy = field.getMaxy() + 1;
+            minx = field.getMinx();
+            maxx = field.getMaxx();
+            minz = field.getMinz();
+            maxz = field.getMaxz();
         }
 
-        for (int x = minx; x <= maxx; x++) {
-            Location loc = new Location(player.getWorld(), x, miny, maxz);
-            vis.addBlock(loc);
-
-            loc = new Location(player.getWorld(), x, maxy, minz);
-            vis.addBlock(loc);
-
-            loc = new Location(player.getWorld(), x, miny, minz);
-            vis.addBlock(loc);
-
-            loc = new Location(player.getWorld(), x, maxy, maxz);
-            vis.addBlock(loc);
-        }
-
-        for (int y = miny; y <= maxy; y++) {
-            Location loc = new Location(player.getWorld(), minx, y, maxz);
-            vis.addBlock(loc);
-
-            loc = new Location(player.getWorld(), maxx, y, minz);
-            vis.addBlock(loc);
-
-            loc = new Location(player.getWorld(), minx, y, minz);
-            vis.addBlock(loc);
-
-            loc = new Location(player.getWorld(), maxx, y, maxz);
-            vis.addBlock(loc);
-        }
-
+        World world = player.getWorld();
+        List<Location> groundBlocks = new ArrayList<>();
         for (int z = minz; z <= maxz; z++) {
-            Location loc = new Location(player.getWorld(), minx, maxy, z);
-            vis.addBlock(loc);
+            int y = world.getHighestBlockYAt(minx, z);
+            groundBlocks.add(new Location(world, minx, y, z));
 
-            loc = new Location(player.getWorld(), maxx, miny, z);
-            vis.addBlock(loc);
-
-            loc = new Location(player.getWorld(), minx, miny, z);
-            vis.addBlock(loc);
-
-            loc = new Location(player.getWorld(), maxx, maxy, z);
-            vis.addBlock(loc);
+            y = world.getHighestBlockYAt(maxx, z);
+            groundBlocks.add(new Location(world, maxx, y, z));
         }
+        for (int x = minx + 1; x < maxx; x++) {
+            int y = world.getHighestBlockYAt(x, minz);
+            groundBlocks.add(new Location(world, x, y, minz));
 
-        int spacing = ((Math.max(Math.max((maxx - minx), (maxy - miny)), (maxz - minz)) + 2) / data.getDensity()) + 1;
-
-        for (int y = miny; y <= maxy; y++) {
-            boolean yTurn = turnCounter(player.getName() + 1, spacing);
-
-            if (maxy - y < spacing) {
-                yTurn = false;
-            }
-
-            int count = 0;
-            for (int z = minz; z <= maxz; z++) {
-                if (yTurn || turnCounter(player.getName() + 2, spacing)) {
-                    if (maxz - z < spacing && !yTurn) {
-                        break;
-                    }
-
-                    if (!yTurn && count >= data.getDensity() - 1) {
-                        break;
-                    }
-
-                    Location loc = new Location(player.getWorld(), minx, y, z);
-                    vis.addBlock(loc);
-
-                    loc = new Location(player.getWorld(), maxx, y, z);
-                    vis.addBlock(loc);
-                    count++;
-                }
-            }
-            counts.put(player.getName() + 2, 0);
+            y = world.getHighestBlockYAt(x, maxz);
+            groundBlocks.add(new Location(world, x, y, maxz));
         }
-        counts.put(player.getName() + 1, 0);
-
-
-        for (int x = minx; x <= maxx; x++) {
-            boolean xTurn = turnCounter(player.getName() + 1, spacing);
-
-            if (maxx - x < spacing) {
-                xTurn = false;
-            }
-
-            int count = 0;
-            for (int z = minz; z <= maxz; z++) {
-                if (xTurn || turnCounter(player.getName() + 2, spacing)) {
-                    if (maxz - z < spacing && !xTurn) {
-                        break;
-                    }
-
-                    if (!xTurn && count >= data.getDensity() - 1) {
-                        break;
-                    }
-
-                    Location loc = new Location(player.getWorld(), x, miny, z);
-                    vis.addBlock(loc);
-
-                    loc = new Location(player.getWorld(), x, maxy, z);
-                    vis.addBlock(loc);
-                    count++;
-                }
-            }
-            counts.put(player.getName() + 2, 0);
-        }
-        counts.put(player.getName() + 1, 0);
-
-
-        for (int y = miny; y <= maxy; y++) {
-            boolean yTurn = turnCounter(player.getName() + 1, spacing);
-
-            if (maxy - y < spacing) {
-                yTurn = false;
-            }
-
-            int count = 0;
-            for (int x = minx; x <= maxx; x++) {
-                if (maxx - x < spacing && !yTurn) {
-                    break;
-                }
-
-                if (!yTurn && count >= data.getDensity() - 1) {
-                    break;
-                }
-
-                if (yTurn || turnCounter(player.getName() + 2, spacing)) {
-                    Location loc = new Location(player.getWorld(), x, y, minz);
-                    vis.addBlock(loc);
-
-                    loc = new Location(player.getWorld(), x, y, maxz);
-                    vis.addBlock(loc);
-                    count++;
-                }
-            }
-            counts.put(player.getName() + 2, 0);
-        }
-        counts.put(player.getName() + 1, 0);
 
         visualizations.put(player.getName(), vis);
+        new Visualize(groundBlocks, player, false, false, plugin.getSettingsManager().getVisualizeSeconds());
     }
 
     private boolean turnCounter(String name, int size) {
@@ -579,18 +453,63 @@ public class VisualizationManager {
         }
     }
 
-    /**
-     * Reverts any player's entire visualization buffer
-     *
-     * @param player
-     */
     public void revert(Player player) {
         Visualization vis = visualizations.get(player.getName());
 
-        if (vis != null) {
-            visualizations.remove(player.getName());
-            Visualize visualize = new Visualize(vis.getBlocks(), player, true, false, 0);
+        if (vis == null) {
+            return;
         }
+        if (plugin.getCuboidManager().hasOpenCuboid(player)) {
+            return;
+        }
+
+        PlayerEntry data = plugin.getPlayerManager().getPlayerEntry(player);
+        if (data.getDensity() == 0) {
+            return;
+        }
+
+        List<Location> groundBlocks = new ArrayList<>();
+
+        for (Field field : vis.getFields()) {
+            int minx = field.getX() - field.getRadius();
+            int maxx = field.getX() + field.getRadius();
+            int minz = field.getZ() - field.getRadius();
+            int maxz = field.getZ() + field.getRadius();
+
+            if (field.hasFlag(FieldFlag.CUBOID)) {
+                minx = field.getMinx();
+                maxx = field.getMaxx();
+                minz = field.getMinz();
+                maxz = field.getMaxz();
+            }
+
+            World world = player.getWorld();
+
+            // Bordas Z
+            for (int z = minz; z <= maxz; z++) {
+                int y1 = world.getHighestBlockYAt(minx, z);
+                groundBlocks.add(new Location(world, minx, y1, z));
+
+                int y2 = world.getHighestBlockYAt(maxx, z);
+                groundBlocks.add(new Location(world, maxx, y2, z));
+            }
+
+            // Bordas X
+            for (int x = minx + 1; x < maxx; x++) {
+                int y1 = world.getHighestBlockYAt(x, minz);
+                groundBlocks.add(new Location(world, x, y1, minz));
+
+                int y2 = world.getHighestBlockYAt(x, maxz);
+                groundBlocks.add(new Location(world, x, y2, maxz));
+            }
+        }
+
+        // Agora realmente reverte os blocos para o estado original
+        for (Location loc : groundBlocks) {
+            player.sendBlockChange(loc, loc.getBlock().getBlockData());
+        }
+
+        visualizations.remove(player.getName());
     }
 
     /**

@@ -1,10 +1,10 @@
 package net.sacredlabyrinth.Phaed.PreciousStones.visualization;
 
 import net.sacredlabyrinth.Phaed.PreciousStones.PreciousStones;
+import net.sacredlabyrinth.Phaed.PreciousStones.helpers.ChatHelper;
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.bukkit.Location;
-import org.bukkit.Particle;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -12,9 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-/**
- * @author phaed
- */
 public class Visualize extends BukkitRunnable {
     private PreciousStones plugin;
     private Queue<Location> visualizationQueue = new LinkedList<>();
@@ -31,19 +28,24 @@ public class Visualize extends BukkitRunnable {
         this.player = player;
         this.skipRevert = skipRevert;
         this.seconds = seconds;
+
         timerID = this.runTaskTimerAsynchronously(plugin, 1, PreciousStones.getInstance().getSettingsManager().getVisualizeTicksBetweenSends()).getTaskId();
     }
 
+    @Override
     public void run() {
         int i = 0;
-
         while (i < PreciousStones.getInstance().getSettingsManager().getVisualizeSendSize() && !visualizationQueue.isEmpty()) {
             Location loc = visualizationQueue.poll();
+            if (loc == null) continue;
 
-            if (!loc.equals(player.getLocation()) && !loc.equals(player.getLocation().add(0, 1, 0))) {
-                if (!reverting) {
-                    player.spawnParticle(Particle.REDSTONE, loc, 10, 0.5, 0.5, 0.5, 0, new Particle.DustOptions(Color.fromRGB(255, 0, 0), 1));
-                }
+            if (reverting) {
+                player.sendBlockChange(loc, loc.getBlock().getBlockData());
+                player.sendMessage(ChatHelper.format("visualizationAutodisabled"));
+            } else {
+                Location top = loc.clone();
+                top.setY(loc.getWorld().getHighestBlockYAt(loc));
+                player.sendBlockChange(top, Material.GOLD_BLOCK.createBlockData());
             }
             i++;
         }
@@ -51,10 +53,8 @@ public class Visualize extends BukkitRunnable {
         if (visualizationQueue.isEmpty()) {
             Bukkit.getServer().getScheduler().cancelTask(timerID);
 
-            if (!reverting) {
-                if (!skipRevert) {
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> plugin.getVisualizationManager().revert(player), 20L * seconds);
-                }
+            if (!reverting && !skipRevert) {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> plugin.getVisualizationManager().revert(player), 20L * seconds);
             }
         }
     }

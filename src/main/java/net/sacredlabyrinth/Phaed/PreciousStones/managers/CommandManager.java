@@ -916,7 +916,9 @@ public final class CommandManager implements TabExecutor {
                                     }
                                 }
                             } else {
-                                ChatHelper.send(sender, "visualizationTakingPlace");
+                                plugin.getVisualizationManager().revert(player);
+                                ChatHelper.send(sender, "visualizationDisabled");
+                                return true;
                             }
                         } else {
                             ChatHelper.send(sender, "visualizationNotWhileCuboid");
@@ -962,7 +964,9 @@ public final class CommandManager implements TabExecutor {
                                     }
                                 }
                             } else {
-                                ChatHelper.send(sender, "visualizationTakingPlace");
+                                plugin.getVisualizationManager().revert(player);
+                                ChatHelper.send(sender, "visualizationDisabled");
+                                return true;
                             }
                         } else {
                             ChatHelper.send(sender, "markingNotWhileCuboid");
@@ -2177,6 +2181,7 @@ public final class CommandManager implements TabExecutor {
             options.add(ChatHelper.format("commandDisable"));
             options.add(ChatHelper.format("commandEnable"));
             options.add(ChatHelper.format("commandToggle"));
+            options.add(ChatHelper.format("commandVisualize"));
         } else if (args.length == 2) {
             String subCommand = args[0];
             if (subCommand.equals(ChatHelper.format("commandGive"))) {
